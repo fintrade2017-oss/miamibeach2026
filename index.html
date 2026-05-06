@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerary: YVE Hotel to JP Morgan (Mary Brickell)</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            color: #333; 
+            line-height: 1.6; 
+            padding: 20px;
+            margin: 0;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .language-selector {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            background: #004a99;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 2px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+        .language-btn:hover {
+            background: #003d7a;
+        }
+        .language-btn.active {
+            background: #ff8200;
+        }
+        h1 { 
+            color: #004a99; 
+            text-align: center; 
+            border-bottom: 2px solid #004a99; 
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .badge { 
+            background: #ff8200; 
+            color: white; 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .station-box { 
+            border-left: 5px solid #ff8200; 
+            padding-left: 15px; 
+            margin: 20px 0;
+            background: #fff;
+        }
+        .step { 
+            margin-bottom: 15px; 
+            position: relative; 
+            padding-left: 30px;
+        }
+        .step::before { 
+            content: '•'; 
+            position: absolute; 
+            left: 0; 
+            color: #ff8200; 
+            font-size: 2em; 
+            line-height: 1; 
+        }
+        .highlight { 
+            font-weight: bold; 
+            color: #004a99; 
+        }
+        .footer { 
+            text-align: center; 
+            font-size: 0.8em; 
+            color: #777; 
+            margin-top: 30px;
+        }
+        .btn { 
+            display: block; 
+            width: 100%; 
+            text-align: center; 
+            background: #004a99; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            margin-top: 20px; 
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #003d7a;
+        }
+        
+        /* Estilos para las imágenes */
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Información del hotel */
+        .hotel-info {
+            background: #f0f7ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #004a99;
+        }
+        .hotel-info h3 {
+            color: #004a99;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        /* Estilo para el flotante del mapa */
+        .floating-map {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .floating-map::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/brickell.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .map-content {
+            position: relative;
+            z-index: 1;
+        }
+        .map-content h3 {
+            color: #004a99;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .map-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        /* Información adicional flotante */
+        .info-box {
+            background: #e6f2ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #004a99;
+        }
+        .info-box p {
+            margin: 0 0 10px 0;
+        }
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Resumen claro y conciso */
+        .summary-box {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ff8200;
+            text-align: center;
+        }
+        .summary-box h3 {
+            color: #ff8200;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .summary-step {
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 130, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        /* Planos completos del Metromover */
+        .full-maps-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .full-maps-section h3 {
+            color: #004a99;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .maps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .maps-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Nuevas imágenes al final */
+        .additional-images-section {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .additional-images-section h3 {
+            color: #004a99;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .additional-images-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .additional-images-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Animación suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .station-box {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .floating-map {
+            animation: fadeIn 0.7s ease-out;
+        }
+        .hotel-info {
+            animation: fadeIn 0.6s ease-out;
+        }
+        .summary-box {
+            animation: fadeIn 0.8s ease-out;
+        }
+        .full-maps-section {
+            animation: fadeIn 0.9s ease-out;
+        }
+        .additional-images-section {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        /* Clases para contenido multilingüe */
+        .lang-es { display: block; }
+        .lang-en { display: none; }
+        
+        body.en .lang-es { display: none; }
+        body.en .lang-en { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="language-selector">
+        <button class="language-btn active" onclick="setLanguage('es')">ES</button>
+        <button class="language-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+    
+    <h1 class="lang-es">Miami Travel Guide (Actualizado)</h1>
+    <h1 class="lang-en">Miami Travel Guide (Updated)</h1>
+    
+    <!-- Imagen de inicio -->
+    <div class="image-container">
+        <img src="images/yve-hotel.png" alt="YVE Hotel - Vista exterior nocturna / YVE Hotel - Night exterior view">
+    </div>
+    
+    <!-- Información del hotel -->
+    <div class="hotel-info">
+        <h3 class="lang-es">Sobre el YVE Hotel</h3>
+        <h3 class="lang-en">About YVE Hotel</h3>
+        <p class="lang-es">El YVE Hotel es un establecimiento de lujo inaugurado en <strong>2019</strong>, ubicado en el corazón de Downtown Miami. Ofrece vistas espectaculares de la bahía y está diseñado con un estilo contemporáneo que refleja la vibrante cultura de la ciudad.</p>
+        <p class="lang-en">The YVE Hotel is a luxury property opened in <strong>2019</strong>, located in the heart of Downtown Miami. It offers spectacular bay views and is designed with a contemporary style that reflects the city's vibrant culture.</p>
+    </div>
+    
+    <p class="lang-es"><strong>Desde:</strong> YVE Hotel (146 Biscayne Blvd)<br>
+    <strong>Hasta:</strong> JP Morgan (80 SW 8th St, Unit 100 - Mary Brickell Village)</p>
+    <p class="lang-en"><strong>From:</strong> YVE Hotel (146 Biscayne Blvd)<br>
+    <strong>To:</strong> JP Morgan (80 SW 8th St, Unit 100 - Mary Brickell Village)</p>
+    
+    <div class="station-box">
+        <span class="badge lang-es">PASO 1</span>
+        <span class="badge lang-en">STEP 1</span>
+        <p class="step lang-es">Caminar 1 minuto al Oeste hasta <span class="highlight">College/Bayside Station</span>.</p>
+        <p class="step lang-en">Walk 1 minute West to <span class="highlight">College/Bayside Station</span>.</p>
+    </div>
+
+    <div class="station-box">
+        <span class="badge lang-es">PASO 2</span>
+        <span class="badge lang-en">STEP 2</span>
+        <p class="step lang-es">Subir al Metromover: <span class="highlight">BRICKELL LOOP</span> (Sentido sur).</p>
+        <p class="step lang-en">Board the Metromover: <span class="highlight">BRICKELL LOOP</span> (Southbound).</p>
+        <p class="step lang-es" style="font-style: italic; font-size: 0.9em;">El servicio es gratuito. Busca el tren con dirección a Brickell.</p>
+        <p class="step lang-en" style="font-style: italic; font-size: 0.9em;">Service is free. Look for the train heading towards Brickell.</p>
+    </div>
+
+    <!-- Resumen claro y conciso -->
+    <div class="summary-box">
+        <h3 class="lang-es">Resumen del Viaje</h3>
+        <h3 class="lang-en">Journey Summary</h3>
+        
+        <div class="summary-step lang-es">
+            <strong>Sube en College Bayside.</strong>
+        </div>
+        
+        <div class="summary-step lang-en">
+            <strong>Board at College Bayside.</strong>
+        </div>
+        
+        <div class="summary-step lang-es">
+            <strong>Tren: BRICKELL LOOP</strong>
+        </div>
+        
+        <div class="summary-step lang-en">
+            <strong>Train: BRICKELL LOOP</strong>
+        </div>
+        
+        <div class="summary-step lang-es">
+            <strong>Bájate en BRICKELL CITY CENTRE (EIGHTH STREET).</strong>
+        </div>
+        
+        <div class="summary-step lang-en">
+            <strong>Get off at BRICKELL CITY CENTRE (EIGHTH STREET).</strong>
+        </div>
+    </div>
+
+    <!-- Mapa flotante -->
+    <div class="floating-map">
+        <div class="map-content">
+            <h3 class="lang-es">Recorrido del Metromover</h3>
+            <h3 class="lang-en">Metromover Route</h3>
+            <img src="images/brickell.png" alt="Plano del Metromover de Miami / Miami Metromover map">
+            
+            <div class="info-box">
+                <p class="lang-es"><strong>Información útil:</strong></p>
+                <p class="lang-es">• El servicio es 100% gratuito</p>
+                <p class="lang-es">• Frecuencia: cada 3-5 minutos</p>
+                <p class="lang-es">• Tiempo estimado: 8-10 minutos</p>
+                
+                <p class="lang-en"><strong>Useful information:</strong></p>
+                <p class="lang-en">• Service is 100% free</p>
+                <p class="lang-en">• Frequency: every 3-5 minutes</p>
+                <p class="lang-en">• Estimated time: 8-10 minutes</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="station-box">
+        <span class="badge lang-es">PASO 3</span>
+        <span class="badge lang-en">STEP 3</span>
+        <p class="step lang-es">Bajarse en <span class="highlight">BRICKELL CITY CENTRE (EIGHTH STREET)</span> (aprox. 8-10 min de viaje).</p>
+        <p class="step lang-en">Get off at <span class="highlight">BRICKELL CITY CENTRE (EIGHTH STREET)</span> (approx. 8-10 min ride).</p>
+    </div>
+
+    <div class="station-box">
+        <span class="badge lang-es">PASO 4</span>
+        <span class="badge lang-en">STEP 4</span>
+        <p class="step lang-es">Salir de la estación. La oficina de JP Morgan en <span class="highlight">Mary Brickell Village</span> está a solo unos pasos (Unit 100).</p>
+        <p class="step lang-en">Exit the station. The JP Morgan office at <span class="highlight">Mary Brickell Village</span> is just a few steps away (Unit 100).</p>
+    </div>
+
+    <!-- Imagen final -->
+    <div class="image-container">
+        <img src="images/80-88-SW-8.png" alt="JP Morgan - Mary Brickell Village">
+    </div>
+
+    <!-- Planos completos del Metromover -->
+    <div class="full-maps-section">
+        <h3 class="lang-es">Planos Completos del Metromover</h3>
+        <h3 class="lang-en">Complete Metromover Maps</h3>
+        
+        <div class="maps-container">
+            <img src="images/planomercomover1.png" alt="Plano completo 1 del Metromover de Miami / Complete Metromover Map 1">
+            <img src="images/planomercomover2.png" alt="Plano completo 2 del Metromover de Miami / Complete Metromover Map 2">
+        </div>
+    </div>
+
+    <!-- Nuevas imágenes al final -->
+    <div class="additional-images-section">
+        <h3 class="lang-es">Información Adicional del Trayecto</h3>
+        <h3 class="lang-en">Additional Journey Information</h3>
+        
+        <div class="additional-images-container">
+            <img src="images/trayectoapie.png" alt="Trayecto a pie desde la estación / Walking route from the station">
+            <img src="images/krickellloop.png" alt="Brickell Loop - Esquema del recorrido / Brickell Loop - Route diagram">
+        </div>
+    </div>
+
+    <a href="https://www.google.com/maps/dir/146+Biscayne+Blvd,+Miami,+FL+33132/80+SW+8th+St+Unit+100,+Miami,+FL+33130" class="btn" target="_blank">
+        <span class="lang-es">Abrir en Google Maps</span>
+        <span class="lang-en">Open in Google Maps</span>
+    </a>
+
+    <div class="footer">
+        <span class="lang-es">Ubicación de Oficina Actualizada - Mayo 2026</span>
+        <span class="lang-en">Updated Office Location - May 2026</span>
+    </div>
+</div>
+
+<script>
+    function setLanguage(lang) {
+        const body = document.body;
+        const buttons = document.querySelectorAll('.language-btn');
+        
+        // Actualizar clase del body
+        body.className = lang === 'en' ? 'en' : '';
+        
+        // Actualizar estado de botones
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if ((lang === 'es' && btn.textContent === 'ES') || 
+                (lang === 'en' && btn.textContent === 'EN')) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Guardar preferencia en localStorage
+        localStorage.setItem('preferredLanguage', lang);
+    }
+    
+    // Cargar idioma guardado al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedLang = localStorage.getItem('preferredLanguage') || 'es';
+        setLanguage(savedLang);
+    });
+</script>
+
+</body>
+</html>
